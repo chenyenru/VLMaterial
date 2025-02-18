@@ -1,0 +1,626 @@
+{
+    "ShaderNodeAmbientOcclusion": {
+        "Distance": [0.0, 1000.0],
+        "Normal": [0.0, 0.0],
+        "samples": [1, 128]
+    },
+    "ShaderNodeAttribute": {
+        "attribute_type": [
+            "GEOMETRY",
+            "OBJECT",
+            "INSTANCER"
+        ]
+    },
+    "ShaderNodeBackground": {
+        "Strength": [0.0, 1e6],
+        "Weight": "unused"
+    },
+    "ShaderNodeBevel": {
+        "Radius": [0.0, 1000.0],
+        "Normal": [0.0, 0.0],
+        "samples": [2, 16]
+    },
+    "ShaderNodeBlackbody": {
+        "Temperature": [800.0, 12000.0]
+    },
+    "ShaderNodeBrightContrast": {
+        "Bright": [-100.0, 100.0],
+        "Contrast": [-100.0, 100.0]
+    },
+    "ShaderNodeBsdfAnisotropic": {
+        "Roughness": [0.0, 1.0],
+        "Anisotropy": [-1.0, 1.0],
+        "Rotation": [0.0, 1.0],
+        "Normal": [0.0, 0.0],
+        "Tangent": [0.0, 0.0],
+        "Weight": "unused",
+        "distribution": [
+            "BECKMANN",
+            "GGX",
+            "MULTI_GGX",
+            "ASHIKHMIN_SHIRLEY"
+        ]
+    },
+    "ShaderNodeBsdfDiffuse": {
+        "Roughness": [0.0, 1.0],
+        "Normal": [0.0, 0.0],
+        "Weight": "unused"
+    },
+    "ShaderNodeBsdfGlass": {
+        "Roughness": [0.0, 1.0],
+        "IOR": [0.0, 1000.0],
+        "Normal": [0.0, 0.0],
+        "Weight": "unused",
+        "distribution": [
+            "SHARP",
+            "BECKMANN",
+            "GGX",
+            "MULTI_GGX"
+        ]
+    },
+    "ShaderNodeBsdfGlossy": {
+        "Roughness": [0.0, 1.0],
+        "Normal": [0.0, 0.0],
+        "Weight": "unused",
+        "distribution": [
+            "SHARP",
+            "BECKMANN",
+            "GGX",
+            "ASHIKHMIN_SHIRLEY",
+            "MULTI_GGX"
+        ]
+    },
+    "ShaderNodeBsdfHair": {
+        "Offset": [-1.5707963267948966, 1.5707963267948966],
+        "RoughnessU": [0.0, 1.0],
+        "RoughnessV": [0.0, 1.0],
+        "Tangent": [0.0, 0.0],
+        "Weight": "unused",
+        "component": [
+            "Reflection",
+            "Transmission"
+        ]
+    },
+    "ShaderNodeBsdfHairPrincipled": {
+        "Melanin": [0.0, 1.0],
+        "Melanin_Redness": [0.0, 1.0],
+        "Absorption_Coefficient": [0.0, 1000.0],
+        "Roughness": [0.0, 1.0],
+        "Radial_Roughness": [0.0, 1.0],
+        "Coat": [0.0, 1.0],
+        "IOR": [0.0, 1000.0],
+        "Offset": [-1.5707963267948966, 1.5707963267948966],
+        "Random_Color": [0.0, 1.0],
+        "Random_Roughness": [0.0, 1.0],
+        "Random": [0.0, 0.0],
+        "Weight": "unused",
+        "parametrization": [
+            "ABSORPTION",
+            "MELANIN",
+            "COLOR"
+        ]
+    },
+    "ShaderNodeBsdfPrincipled": {
+        "Subsurface": [0.0, 1.0],
+        "Subsurface_Radius": [0.0, 100.0],
+        "Subsurface_IOR": [1.01, 3.8],
+        "Subsurface_Anisotropy": [0.0, 1.0],
+        "Metallic": [0.0, 1.0],
+        "Specular": [0.0, 1.0],
+        "Specular_Tint": [0.0, 1.0],
+        "Roughness": [0.0, 1.0],
+        "Anisotropic": [0.0, 1.0],
+        "Anisotropic_Rotation": [0.0, 1.0],
+        "Sheen": [0.0, 1.0],
+        "Sheen_Tint": [0.0, 1.0],
+        "Clearcoat": [0.0, 1.0],
+        "Clearcoat_Roughness": [0.0, 1.0],
+        "IOR": [0.0, 1000.0],
+        "Transmission": [0.0, 1.0],
+        "Transmission_Roughness": [0.0, 1.0],
+        "Emission_Strength": [0.0, 1e6],
+        "Alpha": [0.0, 1.0],
+        "Normal": [0.0, 0.0],
+        "Clearcoat_Normal": [0.0, 0.0],
+        "Tangent": [0.0, 0.0],
+        "Weight": "unused",
+        "distribution": [
+            "GGX",
+            "MULTI_GGX"
+        ],
+        "subsurface_method": [
+            "BURLEY",
+            "RANDOM_WALK_FIXED_RADIUS",
+            "RANDOM_WALK"
+        ]
+    },
+    "ShaderNodeBsdfRefraction": {
+        "Roughness": [0.0, 1.0],
+        "IOR": [0.0, 1000.0],
+        "Normal": [0.0, 0.0],
+        "Weight": "unused",
+        "distribution": [
+            "SHARP",
+            "BECKMANN",
+            "GGX"
+        ]
+    },
+    "ShaderNodeBsdfToon": {
+        "Size": [0.0, 1.0],
+        "Smooth": [0.0, 1.0],
+        "Normal": [0.0, 0.0],
+        "Weight": "unused",
+        "component": [
+            "DIFFUSE",
+            "GLOSSY"
+        ]
+    },
+    "ShaderNodeBsdfTranslucent": {
+        "Normal": [0.0, 0.0],
+        "Weight": "unused"
+    },
+    "ShaderNodeBsdfTransparent": {
+        "Weight": "unused"
+    },
+    "ShaderNodeBsdfVelvet": {
+        "Sigma": [0.0, 1.0],
+        "Normal": [0.0, 0.0],
+        "Weight": "unused"
+    },
+    "ShaderNodeBump": {
+        "Strength": [0.0, 1.0],
+        "Distance": [0.0, 1000.0],
+        "Height": [-1000.0, 1000.0],
+        "Normal": [0.0, 0.0]
+    },
+    "ShaderNodeClamp": {
+        "Min": [-1e4, 1e4],
+        "Max": [-1e4, 1e4],
+        "clamp_type": [
+            "MINMAX",
+            "RANGE"
+        ]
+    },
+    "ShaderNodeCombineColor": {
+        "Red": [0.0, 1.0],
+        "Green": [0.0, 1.0],
+        "Blue": [0.0, 1.0],
+        "mode": [
+            "RGB",
+            "HSV",
+            "HSL"
+        ]
+    },
+    "ShaderNodeCombineHSV": {
+        "H": [0.0, 1.0],
+        "S": [0.0, 1.0],
+        "V": [0.0, 1.0]
+    },
+    "ShaderNodeCombineXYZ": {
+        "X": [-1e4, 1e4],
+        "Y": [-1e4, 1e4],
+        "Z": [-1e4, 1e4]
+    },
+    "ShaderNodeDisplacement": {
+        "Height": [0.0, 1000.0],
+        "Midlevel": [0.0, 1000.0],
+        "Scale": [0.0, 1000.0],
+        "Normal": [0.0, 0.0],
+        "space": [
+            "OBJECT",
+            "WORLD"
+        ]
+    },
+    "ShaderNodeEmission": {
+        "Strength": [0.0, 1e6],
+        "Weight": "unused"
+    },
+    "ShaderNodeFloatCurve": {
+        "Factor": [0.0, 1.0]
+    },
+    "ShaderNodeFresnel": {
+        "IOR": [0.0, 1000.0],
+        "Normal": [0.0, 0.0]
+    },
+    "ShaderNodeGamma": {
+        "Gamma": [0.001, 10.0]
+    },
+    "ShaderNodeHoldout": {
+        "Weight": "unused"
+    },
+    "ShaderNodeHueSaturation": {
+        "Hue": [-1.0, 1.0],
+        "Saturation": [0.0, 2.0],
+        "Value": [0.0, 2.0],
+        "Fac": [0.0, 1.0]
+    },
+    "ShaderNodeInvert": {
+        "Fac": [0.0, 1.0]
+    },
+    "ShaderNodeLayerWeight": {
+        "Blend": [0.0, 1.0],
+        "Normal": [0.0, 0.0]
+    },
+    "ShaderNodeLightFalloff": {
+        "Strength": [0.0, 1e6],
+        "Smooth": [0.0, 1000.0]
+    },
+    "ShaderNodeMapRange": {
+        "Value": [-1e4, 1e4],
+        "From_Min": [-1e4, 1e4],
+        "From_Max": [-1e4, 1e4],
+        "To_Min": [-1e4, 1e4],
+        "To_Max": [-1e4, 1e4],
+        "Steps": [-1e4, 1e4],
+        "Vector": [0.0, 0.0],
+        "data_type": [
+            "FLOAT",
+            "FLOAT_VECTOR"
+        ],
+        "interpolation_type": [
+            "LINEAR",
+            "STEPPED",
+            "SMOOTHSTEP",
+            "SMOOTHERSTEP"
+        ]
+    },
+    "ShaderNodeMath": {
+        "Value": [-1e4, 1e4],
+        "Value_001": [-1e4, 1e4],
+        "Value_002": [-1e4, 1e4],
+        "operation": [
+            "ADD",
+            "SUBTRACT",
+            "MULTIPLY",
+            "DIVIDE",
+            "MULTIPLY_ADD",
+            "POWER",
+            "LOGARITHM",
+            "SQRT",
+            "INVERSE_SQRT",
+            "ABSOLUTE",
+            "EXPONENT",
+            "MINIMUM",
+            "MAXIMUM",
+            "LESS_THAN",
+            "GREATER_THAN",
+            "SIGN",
+            "COMPARE",
+            "SMOOTH_MIN",
+            "SMOOTH_MAX",
+            "ROUND",
+            "FLOOR",
+            "CEIL",
+            "TRUNC",
+            "FRACT",
+            "MODULO",
+            "WRAP",
+            "SNAP",
+            "PINGPONG",
+            "SINE",
+            "COSINE",
+            "TANGENT",
+            "ARCSINE",
+            "ARCCOSINE",
+            "ARCTANGENT",
+            "ARCTAN2",
+            "SINH",
+            "COSH",
+            "TANH",
+            "RADIANS",
+            "DEGREES"
+        ]
+    },
+    "ShaderNodeMixRGB": {
+        "Fac": [0.0, 1.0],
+        "blend_type": [
+            "MIX",
+            "DARKEN",
+            "MULTIPLY",
+            "BURN",
+            "LIGHTEN",
+            "SCREEN",
+            "DODGE",
+            "ADD",
+            "OVERLAY",
+            "SOFT_LIGHT",
+            "LINEAR_LIGHT",
+            "DIFFERENCE",
+            "SUBTRACT",
+            "DIVIDE",
+            "HUE",
+            "SATURATION",
+            "COLOR",
+            "VALUE"
+        ]
+    },
+    "ShaderNodeMixShader": {
+        "Fac": [0.0, 1.0]
+    },
+    "ShaderNodeNormal": {
+        "Normal": [-1.0, 1.0]
+    },
+    "ShaderNodeNormalMap": {
+        "Strength": [0.0, 10.0],
+        "space": [
+            "TANGENT",
+            "OBJECT",
+            "WORLD",
+            "BLENDER_OBJECT",
+            "BLENDER_WORLD"
+        ]
+    },
+    "ShaderNodeOutputMaterial": {
+        "Displacement": [0.0, 0.0],
+        "Thickness": "unused"
+    },
+    "ShaderNodeRGBCurve": {
+        "Fac": [0.0, 1.0]
+    },
+    "ShaderNodeSeparateXYZ": {
+        "Vector": [-1e4, 1e4]
+    },
+    "ShaderNodeSubsurfaceScattering": {
+        "Scale": [0.0, 1000.0],
+        "Radius": [0.0, 100.0],
+        "IOR": [1.01, 3.8],
+        "Anisotropy": [0.0, 1.0],
+        "Normal": [0.0, 0.0],
+        "Weight": "unused",
+        "falloff": [
+            "BURLEY",
+            "RANDOM_WALK_FIXED_RADIUS",
+            "RANDOM_WALK"
+        ]
+    },
+    "ShaderNodeTangent": {
+        "axis": [
+            "X",
+            "Y",
+            "Z"
+        ],
+        "direction_type": [
+            "RADIAL",
+            "UV_MAP"
+        ]
+    },
+    "ShaderNodeTexBrick": {
+        "Vector": [-1e4, 1e4],
+        "Scale": [-1000.0, 1000.0],
+        "Mortar_Size": [0.0, 0.125],
+        "Mortar_Smooth": [0.0, 1.0],
+        "Bias": [-1.0, 1.0],
+        "Brick_Width": [0.01, 100.0],
+        "Row_Height": [0.01, 100.0],
+        "offset": [0.0, 1.0],
+        "offset_frequency": [1, 99],
+        "squash": [0.0, 99.0],
+        "squash_frequency": [1, 99]
+    },
+    "ShaderNodeTexChecker": {
+        "Vector": [-1e4, 1e4],
+        "Scale": [-1e4, 1e4]
+    },
+    "ShaderNodeTexGradient": {
+        "Vector": [0.0, 0.0],
+        "gradient_type": [
+            "LINEAR",
+            "QUADRATIC",
+            "EASING",
+            "DIAGONAL",
+            "SPHERICAL",
+            "QUADRATIC_SPHERE",
+            "RADIAL"
+        ]
+    },
+    "ShaderNodeTexMagic": {
+        "Scale": [-1000.0, 1000.0],
+        "Distortion": [-1000.0, 1000.0],
+        "turbulence_depth": [0, 10]
+    },
+    "ShaderNodeTexMusgrave": {
+        "Vector": [0.0, 0.0],
+        "W": [-1000.0, 1000.0],
+        "Scale": [-1000.0, 1000.0],
+        "Detail": [0.0, 15.0],
+        "Dimension": [0.0, 1000.0],
+        "Lacunarity": [0.0, 1000.0],
+        "Offset": [-1000.0, 1000.0],
+        "Gain": [0.0, 1000.0],
+        "musgrave_dimensions": [
+            "1D",
+            "2D",
+            "3D",
+            "4D"
+        ],
+        "musgrave_type": [
+            "MULTIFRACTAL",
+            "RIDGED_MULTIFRACTAL",
+            "HYBRID_MULTIFRACTAL",
+            "FBM",
+            "HETERO_TERRAIN"
+        ]
+    },
+    "ShaderNodeTexNoise": {
+        "Vector": [0.0, 0.0],
+        "W": [-1000.0, 1000.0],
+        "Scale": [-1000.0, 1000.0],
+        "Detail": [0.0, 15.0],
+        "Roughness": [0.0, 1.0],
+        "Distortion": [-1000.0, 1000.0],
+        "noise_dimensions": [
+            "1D",
+            "2D",
+            "3D",
+            "4D"
+        ]
+    },
+    "ShaderNodeTexVoronoi": {
+        "Vector": [0.0, 0.0],
+        "W": [-1000.0, 1000.0],
+        "Scale": [-1000.0, 1000.0],
+        "Smoothness": [0.0, 1.0],
+        "Exponent": [0.0, 32.0],
+        "Randomness": [0.0, 1.0],
+        "distance": [
+            "EUCLIDEAN",
+            "MANHATTAN",
+            "CHEBYCHEV",
+            "MINKOWSKI"
+        ],
+        "feature": [
+            "F1",
+            "F2",
+            "SMOOTH_F1",
+            "DISTANCE_TO_EDGE",
+            "N_SPHERE_RADIUS"
+        ],
+        "voronoi_dimensions": [
+            "1D",
+            "2D",
+            "3D",
+            "4D"
+        ]
+    },
+    "ShaderNodeTexWave": {
+        "Vector": [0.0, 0.0],
+        "Scale": [-1000.0, 1000.0],
+        "Distortion": [-1000.0, 1000.0],
+        "Detail": [0.0, 15.0],
+        "Detail_Scale": [-1000.0, 1000.0],
+        "Detail_Roughness": [0.0, 1.0],
+        "Phase_Offset": [-1000.0, 1000.0],
+        "bands_direction": [
+            "X",
+            "Y",
+            "Z",
+            "DIAGONAL"
+        ],
+        "rings_direction": [
+            "X",
+            "Y",
+            "Z",
+            "SPHERICAL"
+        ],
+        "wave_profile": [
+            "SIN",
+            "SAW",
+            "TRI"
+        ],
+        "wave_type": [
+            "BANDS",
+            "RINGS"
+        ]
+    },
+    "ShaderNodeTexWhiteNoise": {
+        "Vector": [-1e4, 1e4],
+        "W": [-1e4, 1e4],
+        "noise_dimensions": [
+            "1D",
+            "2D",
+            "3D",
+            "4D"
+        ]
+    },
+    "ShaderNodeValToRGB": {
+        "Fac": [0.0, 1.0]
+    },
+    "ShaderNodeVectorCurve": {
+        "Fac": [0.0, 1.0],
+        "Vector": [-1.0, 1.0]
+    },
+    "ShaderNodeVectorDisplacement": {
+        "Vector": [0.0, 0.0],
+        "Midlevel": [0.0, 1000.0],
+        "Scale": [0.0, 1000.0],
+        "space": [
+            "TANGENT",
+            "OBJECT",
+            "WORLD"
+        ]
+    },
+    "ShaderNodeVectorMath": {
+        "Vector": [-1e4, 1e4],
+        "Vector_001": [-1e4, 1e4],
+        "Vector_002": [-1e4, 1e4],
+        "Scale": [-1e4, 1e4],
+        "operation": [
+            "ADD",
+            "SUBTRACT",
+            "MULTIPLY",
+            "DIVIDE",
+            "MULTIPLY_ADD",
+            "CROSS_PRODUCT",
+            "PROJECT",
+            "REFLECT",
+            "REFRACT",
+            "FACEFORWARD",
+            "DOT_PRODUCT",
+            "DISTANCE",
+            "LENGTH",
+            "SCALE",
+            "NORMALIZE",
+            "ABSOLUTE",
+            "MINIMUM",
+            "MAXIMUM",
+            "FLOOR",
+            "CEIL",
+            "FRACTION",
+            "MODULO",
+            "WRAP",
+            "SNAP",
+            "SINE",
+            "COSINE",
+            "TANGENT"
+        ]
+    },
+    "ShaderNodeVectorRotate": {
+        "Vector": [0.0, 0.0],
+        "Axis": [-1.0, 1.0],
+        "rotation_type": [
+            "AXIS_ANGLE",
+            "X_AXIS",
+            "Y_AXIS",
+            "Z_AXIS",
+            "EULER_XYZ"
+        ]
+    },
+    "ShaderNodeVectorTransform": {
+        "Vector": [-1e4, 1e4],
+        "convert_from": [
+            "WORLD",
+            "OBJECT",
+            "CAMERA"
+        ],
+        "convert_to": [
+            "WORLD",
+            "OBJECT",
+            "CAMERA"
+        ],
+        "vector_type": [
+            "POINT",
+            "VECTOR",
+            "NORMAL"
+        ]
+    },
+    "ShaderNodeVolumeAbsorption": {
+        "Density": [0.0, 1000.0],
+        "Weight": "unused"
+    },
+    "ShaderNodeVolumePrincipled": {
+        "Density": [0.0, 1000.0],
+        "Anisotropy": [-1.0, 1.0],
+        "Emission_Strength": [0.0, 1000.0],
+        "Blackbody_Intensity": [0.0, 1.0],
+        "Temperature": [0.0, 6500.0],
+        "Weight": "unused"
+    },
+    "ShaderNodeVolumeScatter": {
+        "Density": [0.0, 1000.0],
+        "Anisotropy": [-1.0, 1.0],
+        "Weight": "unused"
+    },
+    "ShaderNodeWireframe": {
+        "Size": [0.0, 100.0]
+    }
+}

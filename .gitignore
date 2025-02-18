@@ -1,0 +1,11 @@
+.vscode
+*.DS_Store
+__pycache__
+checkpoint*
+material_dataset*
+result*
+test_images*
+data_scripts/figure*
+data_scripts/blender*
+infinigen/blender
+infinigen/Python-3.10.2
