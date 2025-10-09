@@ -35,8 +35,8 @@ class Arguments:
     '''Arguments for LLM inference.
     '''
     # I/O
-    test_data_path: str
-    output_dir: str
+    test_data_path: str = ""
+    output_dir: str = "./output"
 
     # Model configuration
     model_path: str | None = None
@@ -46,12 +46,12 @@ class Arguments:
 
     # Dataset-related info
     blender_path: str = osp.join(ROOT_DIR, 'infinigen', 'blender', 'blender')
-    image_folder: str = osp.join(ROOT_DIR, 'material_dataset_filtered_v2')
+    image_folder: str = osp.join(ROOT_DIR, 'material_dataset_filtered')
     info_dir: str = osp.join(ROOT_DIR, 'material_dataset_info')
     data_format: str = 'v1.5'
 
     # Inference settings
-    mode: str = 'all'                   # Inference mode (generation, verification, or both)
+    mode: str = 'all'                   # Inference mode (generation, verification, both, or single)
     num_processes: int = 1              # Number of processes for parallel inference
     num_samples: int = 4                # Target number of samples to generate
     max_samples: int = 20               # Maximum number of trials
@@ -61,6 +61,10 @@ class Arguments:
     top_k: int = 10
     top_p: float = 0.9
     min_file_size: int = 12000          # Minimum file size for rendered material images
+    
+    # Single prompt mode settings
+    single_image_path: str = ""         # Path to single image for single prompt mode
+    single_text_prompt: str = ""        # Text prompt for single prompt mode
 
 
 def response_to_code(response: str) -> str:
@@ -106,6 +110,8 @@ def verify_program(
     }
 
     try:
+        # print("args.blender_path: ", args.blender_path)
+        # print(f"{args.blender_path} -b -P {osp.join(SCRIPTS_DIR, 'render.py')} '--' '-c' {code_path} -i {args.info_dir} -o {render_path}")
         ret = subprocess.run([
             args.blender_path, '-b', '-P', osp.join(SCRIPTS_DIR, 'render.py'),
             '--', '-c', code_path, '-i', args.info_dir, '-o', render_path,
@@ -117,6 +123,7 @@ def verify_program(
 
     # Check render result
     if check_stdout(ret.stdout, render_path, sample_id, stdout_path):
+        # print("Error result: ", ret.stdout)
         return False
 
     # Check the rendered image file size
@@ -268,6 +275,7 @@ def run_inference(
             if args.mode in ('all', 'render'):
                 # Process each response
                 for response in responses:
+                    print("Verifying Programs")
                     if verify_program(
                         response, args, num_passed, num_sampled, example_dir, stdout_path,
                         min_file_size=args.min_file_size, display_id=args.display_id,
@@ -275,6 +283,8 @@ def run_inference(
                     ):
                         pbar.update(1)
                         num_passed += 1
+                    else:
+                       print("Program verification failed!") 
                     num_sampled += 1
 
                     # Finish early if the desired number of samples is reached
@@ -292,6 +302,77 @@ def run_inference(
 
         # Update the result queue
         result_queue.put(idx)
+
+def run_inference_single_prompt(args: Arguments, image_path: str, text_prompt: str) -> str:
+    """Run inference on a single image with a custom text prompt.
+    
+    Args:
+        args: Arguments containing model configuration
+        image_path: Path to the input image
+        text_prompt: Custom text prompt for the model
+        
+    Returns:
+        Generated response text
+    """
+    # Create processor
+    processor = AutoProcessor.from_pretrained(args.model_base)
+    
+    # Set up device - use CPU if CUDA is not available
+    if torch.cuda.is_available() and args.device_id:
+        devices = [f'cuda:{i}' for i in args.device_id]
+        device = torch.device(devices[0])
+    elif torch.cuda.is_available():
+        device = torch.device('cuda:0')
+    else:
+        print("CUDA not available, using CPU")
+        device = torch.device('cpu')
+    
+    # Load model
+    model = load_pretrained_model(args.model_path, args.model_base, device)
+    model.generation_config.pad_token_id = processor.tokenizer.pad_token_id
+    
+    # Load and process image
+    image = Image.open(image_path).convert('RGB')
+    
+    # Create conversation format
+    conversation = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "image"},
+                {"type": "text", "text": text_prompt}
+            ]
+        }
+    ]
+    
+    # Apply chat template
+    prompt = processor.apply_chat_template(conversation, add_generation_prompt=True)
+    
+    inputs = processor(
+        images=image,
+        text=prompt, 
+        return_tensors="pt",
+        add_special_tokens=not prompt.startswith(processor.tokenizer.bos_token)
+    )
+    
+    # Generate response
+    with torch.inference_mode():
+        outputs = model.generate(
+            **inputs,
+            do_sample=args.temperature > 0,
+            max_new_tokens=args.max_length,
+            temperature=args.temperature,
+            top_k=args.top_k,
+            top_p=args.top_p,
+            use_cache=True,
+            return_dict_in_generate=True
+        )
+    
+    # Decode response
+    input_length = inputs['input_ids'].shape[1]
+    response = processor.decode(outputs.sequences[0][input_length:], skip_special_tokens=True)
+    
+    return response
 
 
 def main():
@@ -327,7 +408,7 @@ def main():
     # Spawn processes
     processes = []
     for i in range(args.num_processes):
-        p = Process(target=run_inference, args=(args, i, task_queue, result_queue))
+        p = Process(target=run_inference_one_image_and_prompt, args=(args, i, task_queue, result_queue))
         p.start()
         processes.append(p)
 
