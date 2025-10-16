@@ -355,6 +355,9 @@ def run_inference_single_prompt(args: Arguments, image_path: str, text_prompt: s
         add_special_tokens=not prompt.startswith(processor.tokenizer.bos_token)
     )
     
+    # Move inputs to the same device as the model
+    inputs = {k: v.to(device) if isinstance(v, torch.Tensor) else v for k, v in inputs.items()}
+    
     # Generate response
     with torch.inference_mode():
         outputs = model.generate(
