@@ -9,3 +9,4 @@ data_scripts/figure*
 data_scripts/blender*
 infinigen/blender
 infinigen/Python-3.10.2
+.material_cache
