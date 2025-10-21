@@ -35,6 +35,7 @@ def fetch_material_route():
 
     if not text_input:
         return jsonify({'error': 'No query provided'}), 400
+    print(f"Received query: {text_input}")
 
     # Call the existing main functionality
     try:
