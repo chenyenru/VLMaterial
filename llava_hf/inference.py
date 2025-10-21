@@ -378,6 +378,82 @@ def run_inference_single_prompt(args: Arguments, image_path: str, text_prompt: s
     return response
 
 
+class SinglePromptEngine:
+    """Preload processor and model once and run single-prompt inference efficiently.
+
+    Usage:
+        engine = SinglePromptEngine(args)
+        response = engine.generate(image_path, text_prompt)
+    """
+
+    def __init__(self, args: Arguments):
+        self.args = args
+        # Processor
+        self.processor = AutoProcessor.from_pretrained(args.model_base)
+
+        # Device selection (prefer specified CUDA device, fallback to CUDA:0, then CPU)
+        if torch.cuda.is_available() and args.device_id:
+            devices = [f'cuda:{i}' for i in args.device_id]
+            self.device = torch.device(devices[0])
+        elif torch.cuda.is_available():
+            self.device = torch.device('cuda:0')
+        else:
+            print("CUDA not available, using CPU")
+            self.device = torch.device('cpu')
+
+        # Model
+        self.model = load_pretrained_model(args.model_path, args.model_base, self.device)
+        # Ensure pad token is set for generation
+        self.model.generation_config.pad_token_id = self.processor.tokenizer.pad_token_id
+        self.model.eval()
+
+    @torch.inference_mode()
+    def generate(self, image_path: str, text_prompt: str) -> str:
+        # Load and process image
+        image = Image.open(image_path).convert('RGB')
+
+        # Conversation format
+        conversation = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image"},
+                    {"type": "text", "text": text_prompt}
+                ]
+            }
+        ]
+
+        # Apply chat template
+        prompt = self.processor.apply_chat_template(conversation, add_generation_prompt=True)
+
+        inputs = self.processor(
+            images=image,
+            text=prompt,
+            return_tensors="pt",
+            add_special_tokens=not prompt.startswith(self.processor.tokenizer.bos_token)
+        )
+
+        # Move inputs to device
+        inputs = {k: v.to(self.device) if isinstance(v, torch.Tensor) else v for k, v in inputs.items()}
+
+        # Generate
+        outputs = self.model.generate(
+            **inputs,
+            do_sample=self.args.temperature > 0,
+            max_new_tokens=self.args.max_length,
+            temperature=self.args.temperature,
+            top_k=self.args.top_k,
+            top_p=self.args.top_p,
+            use_cache=True,
+            return_dict_in_generate=True
+        )
+
+        # Decode
+        input_length = inputs['input_ids'].shape[1]
+        response = self.processor.decode(outputs.sequences[0][input_length:], skip_special_tokens=True)
+        return response
+
+
 def main():
     # Parse command-line arguments
     hf_parser = HfArgumentParser(Arguments)

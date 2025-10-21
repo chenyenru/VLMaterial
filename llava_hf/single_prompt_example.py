@@ -8,10 +8,25 @@ import socket
 sys.path.append(osp.dirname(osp.abspath(__file__)))
 sys.path.append(osp.dirname(osp.dirname(osp.abspath(__file__))))  # Add parent dir to path
 
-from inference import Arguments, run_inference_single_prompt
+from inference import Arguments, run_inference_single_prompt, SinglePromptEngine
 from fetch_material import fetch_materials
 
 app = Flask(__name__)
+
+# Preload the processor and model once at startup
+# You can tweak these defaults or make them configurable via env vars
+GLOBAL_ARGS = Arguments(
+    test_data_path="",
+    output_dir="./single_output",
+    model_path=None,  # set to a checkpoint path if you have one
+    model_base=os.environ.get('LLAVA_MODEL_BASE', 'llava-hf/llama3-llava-next-8b-hf'),
+    device_id=[int(x) for x in os.environ.get('CUDA_VISIBLE_IDS', '').split(',') if x.strip().isdigit()],
+    temperature=1.0,
+    top_k=10,
+    top_p=0.9,
+    max_length=2048
+)
+ENGINE = SinglePromptEngine(GLOBAL_ARGS)
 
 @app.route('/fetch_material', methods=['POST'])
 def fetch_material_route():
@@ -23,17 +38,6 @@ def fetch_material_route():
 
     # Call the existing main functionality
     try:
-        args = Arguments(
-            test_data_path="",
-            output_dir="./single_output",
-            model_path=None,
-            model_base='llava-hf/llama3-llava-next-8b-hf',
-            device_id=[],
-            temperature=1.0,
-            top_k=10,
-            top_p=0.9,
-            max_length=2048
-        )
         results = fetch_materials(
             text_input,
             api_url="http://brahmastra.ucsd.edu:3001/search",
@@ -48,7 +52,8 @@ def fetch_material_route():
             return jsonify({'error': 'No image path in results'}), 404
 
         text_prompt = "Write a Python function with Blender API to create a material node graph for this image."
-        response = run_inference_single_prompt(args, image_path, text_prompt)
+        # Use preloaded engine to avoid reloading the model each request
+        response = ENGINE.generate(image_path, text_prompt)
         return jsonify({'response': response}), 200
 
     except Exception as e:
