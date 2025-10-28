@@ -8,7 +8,7 @@ import socket
 sys.path.append(osp.dirname(osp.abspath(__file__)))
 sys.path.append(osp.dirname(osp.dirname(osp.abspath(__file__))))  # Add parent dir to path
 
-from inference import Arguments, run_inference_single_prompt, SinglePromptEngine
+from inference import Arguments, SinglePromptEngine
 from fetch_material import fetch_materials
 
 app = Flask(__name__)
@@ -18,7 +18,7 @@ app = Flask(__name__)
 GLOBAL_ARGS = Arguments(
     test_data_path="",
     output_dir="./single_output",
-    model_path=None,  # set to a checkpoint path if you have one
+    model_path="/app/llava_hf/checkpoints/llava-llama3-8b-sllm-p10/checkpoint-epoch5",  # set to a checkpoint path if you have one
     model_base=os.environ.get('LLAVA_MODEL_BASE', 'llava-hf/llama3-llava-next-8b-hf'),
     device_id=[int(x) for x in os.environ.get('CUDA_VISIBLE_IDS', '').split(',') if x.strip().isdigit()],
     temperature=1.0,
@@ -61,3 +61,15 @@ def fetch_material_route():
         return jsonify({'error': str(e)}), 500
 
 # app.run(host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    PROMPT = (
+    'Write a Python function with Blender API to create a material node graph '
+    'for this image.'
+    )
+    text_prompt = PROMPT
+
+
+    image_path = "/app/llava_hf/results/llava-llama3-8b-sllm-p10/test-single-eval-epoch5/010-blenderkit-granite_fc2964ea-914e-4434-b0b1-ad1b4d6b4b12-blender/input.jpg"
+    response = ENGINE.generate(image_path, text_prompt)
+    print("---")
+    print(response)
