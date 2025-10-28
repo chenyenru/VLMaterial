@@ -11,20 +11,18 @@ os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 
 sys.path.append(osp.dirname(osp.abspath(__file__)))
 
-from dataclasses import dataclass, field
-from torch.multiprocessing import Process, Queue, set_start_method
-from PIL import Image
 import os
 import subprocess
+from dataclasses import dataclass, field
 
-from transformers import HfArgumentParser, AutoProcessor
-from tqdm import tqdm
 import torch
-
 from dataset import DataArguments, MaterialDataset
 from model import load_pretrained_model
-from utils import SYSTEM_PROMPT_LLAVA, log_info, check_stdout
-
+from PIL import Image
+from torch.multiprocessing import Process, Queue, set_start_method
+from tqdm import tqdm
+from transformers import AutoProcessor, HfArgumentParser
+from utils import SYSTEM_PROMPT_LLAVA, check_stdout, log_info
 
 ROOT_DIR = osp.dirname(osp.dirname(osp.abspath(__file__)))
 SCRIPTS_DIR = osp.join(ROOT_DIR, 'data_scripts')
@@ -302,6 +300,124 @@ def run_inference(
 
         # Update the result queue
         result_queue.put(idx)
+
+def render_single_code(
+    code: str | None = None,
+    code_path: str | None = None,
+    *,
+    args: Arguments,
+    example_dir: str,
+    stdout_path: str | None = None,
+    min_file_size: int = 12000,
+    display_id: int | None = None,
+    device_id: int | None = None,
+    timeout: int = 120,
+    save_path: str | None = None,
+) -> str | None:
+    """Render a single Python program using the project's Blender render script.
+
+    Either `code` (a string containing the program) or `code_path` (path to an existing .py file)
+    must be provided. The function writes temporary files into `example_dir`, runs Blender to
+    render an image, checks the output, and on success returns the path to the rendered image.
+    Returns None on failure.
+    """
+    # Prepare example dir
+    os.makedirs(example_dir, exist_ok=True)
+
+    # Paths for temp files
+    temp_code_path = code_path or osp.join(example_dir, "temp_single.py")
+    render_path = osp.join(example_dir, "temp_single_render.jpg")
+
+    # Clean up any previous temp files
+    for f in os.listdir(example_dir):
+        if f.startswith("temp_"):
+            try:
+                os.remove(osp.join(example_dir, f))
+            except OSError:
+                pass
+
+    # Write code string to file if provided
+    if code is not None:
+        with open(temp_code_path, "w") as f:
+            f.write(response_to_code(code))
+    else:
+        if not osp.exists(temp_code_path):
+            raise FileNotFoundError(f"code_path does not exist: {temp_code_path}")
+
+    # Ensure stdout_path exists
+    if stdout_path is None:
+        stdout_path = osp.join(example_dir, "render_single_stdout.log")
+        open(stdout_path, "w").close()
+
+    # Build display name and subprocess kwargs
+    display_name = f":{display_id if display_id is not None else 0}"
+    display_name += f".{device_id}" if device_id is not None else ""
+    # Preserve the caller environment and set DISPLAY so Blender sees the
+    # same PYTHONPATH and other vars (avoids ModuleNotFoundError for packages
+    # installed in the user's environment).
+    env = os.environ.copy()
+    env["DISPLAY"] = display_name
+    render_kwargs = {
+        "capture_output": True,
+        "text": True,
+        "env": env,
+        "timeout": timeout,
+    }
+
+    try:
+        cmd = [
+            args.blender_path,
+            "-b",
+            "-P",
+            osp.join(SCRIPTS_DIR, "render.py"),
+            "--",
+            "-c",
+            temp_code_path,
+            "-i",
+            args.info_dir,
+            "-o",
+            render_path,
+        ]
+        if save_path is not None:
+            cmd += ["--save-path", save_path]
+        ret = subprocess.run(cmd, **render_kwargs)
+    except subprocess.TimeoutExpired:
+        log_info(stdout_path, "Error when rendering single program:\nRender timed out")
+        return None
+
+    # Check render success and file size
+    if check_stdout(ret.stdout, render_path, 0, stdout_path):
+        return None
+
+    if not osp.exists(render_path) or osp.getsize(render_path) < min_file_size:
+        log_info(
+            stdout_path,
+            "Error when rendering single program:\nRendered image too small or missing",
+        )
+        return None
+
+    # Move outputs to a stable name
+    out_render = osp.join(example_dir, "render_single.jpg")
+    try:
+        os.rename(render_path, out_render)
+    except OSError:
+        # If rename fails, try copy
+        import shutil
+
+        shutil.copyfile(render_path, out_render)
+
+    # If we wrote a temp file at temp_code_path (and code was provided), move it too
+    if code is not None:
+        out_code = osp.join(example_dir, "render_single.py")
+        try:
+            os.rename(temp_code_path, out_code)
+        except OSError:
+            import shutil
+
+            shutil.copyfile(temp_code_path, out_code)
+
+    return out_render
+
 
 def run_inference_single_prompt(args: Arguments, image_path: str, text_prompt: str) -> str:
     """Run inference on a single image with a custom text prompt.

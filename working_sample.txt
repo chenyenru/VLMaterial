@@ -1,0 +1,61 @@
+```python
+import bpy
+
+def shader_material(material: bpy.types.Material):
+    material.use_nodes = True
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+
+    # Create nodes
+    material_output = nodes.new('ShaderNodeOutputMaterial')
+    principled_bsdf = nodes.new('ShaderNodeBsdfPrincipled')
+    colorramp = nodes.new('ShaderNodeValToRGB')
+    noise_texture = nodes.new('ShaderNodeTexNoise')
+    noise_texture_1 = nodes.new('ShaderNodeTexNoise')
+    mapping = nodes.new('ShaderNodeMapping')
+    texture_coordinate = nodes.new('ShaderNodeTexCoord')
+    bump = nodes.new('ShaderNodeBump')
+    bump_1 = nodes.new('ShaderNodeBump')
+    noise_texture_2 = nodes.new('ShaderNodeTexNoise')
+    mapping_1 = nodes.new('ShaderNodeMapping')
+    texture_coordinate_1 = nodes.new('ShaderNodeTexCoord')
+    noise_texture_3 = nodes.new('ShaderNodeTexNoise')
+
+    # Create links to connect nodes
+    links.new(principled_bsdf.outputs[0], material_output.inputs[0])
+    links.new(colorramp.outputs[0], principled_bsdf.inputs[0])
+    links.new(bump.outputs[0], principled_bsdf.inputs[22])
+    links.new(noise_texture.outputs[0], colorramp.inputs[0])
+    links.new(noise_texture_1.outputs[0], noise_texture.inputs[0])
+    links.new(mapping.outputs[0], noise_texture_1.inputs[0])
+    links.new(texture_coordinate.outputs[2], mapping.inputs[0])
+    links.new(noise_texture_1.outputs[0], bump.inputs[2])
+    links.new(bump_1.outputs[0], bump.inputs[3])
+    links.new(noise_texture_2.outputs[0], bump_1.inputs[2])
+    links.new(mapping_1.outputs[0], noise_texture_2.inputs[0])
+    links.new(texture_coordinate_1.outputs[3], mapping_1.inputs[0])
+    links.new(noise_texture_3.outputs[0], mapping_1.inputs[1])
+    links.new(texture_coordinate_1.outputs[3], noise_texture_3.inputs[0])
+
+    # Set parameters for each node
+    principled_bsdf.inputs[9].default_value = 0.4
+    principled_bsdf.inputs[12].default_value = 1.0
+    principled_bsdf.inputs[13].default_value = 1.0
+    principled_bsdf.inputs[14].default_value = 1.0
+    principled_bsdf.inputs[15].default_value = 0.25
+    principled_bsdf.subsurface_method = 'BURLEY'
+    colorramp.color_ramp.elements[0].color = [1.0, 1.0, 1.0, 1.0]
+    colorramp.color_ramp.elements[1].position = 0.468
+    colorramp.color_ramp.elements[1].color = [0.0, 0.0, 0.0, 1.0]
+    noise_texture.inputs[2].default_value = 1.0
+    noise_texture.inputs[3].default_value = 10.0
+    noise_texture.inputs[4].default_value = 1.0
+    noise_texture.inputs[5].default_value = 0.1
+    noise_texture_1.inputs[3].default_value = 16.0
+    bump.inputs[0].default_value = 0.05
+    bump_1.inputs[0].default_value = 0.05
+    noise_texture_2.inputs[2].default_value = 1.0
+    noise_texture_2.inputs[3].default_value = 16.0
+    noise_texture_2.inputs[4].default_value = 0.7
+    noise_texture_3.inputs[3].default_value = 16.0
+```
