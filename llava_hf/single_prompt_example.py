@@ -18,13 +18,15 @@ app = Flask(__name__)
 GLOBAL_ARGS = Arguments(
     test_data_path="",
     output_dir="./single_output",
-    model_path="/app/llava_hf/checkpoints/llava-llama3-8b-sllm-p10/checkpoint-epoch5",  # set to a checkpoint path if you have one
+    model_path="/app/llava_hf/checkpoints_pretrained/llava-llama3-8b-sllm-p10/checkpoint-epoch5",  # set to a checkpoint path if you have one
     model_base=os.environ.get('LLAVA_MODEL_BASE', 'llava-hf/llama3-llava-next-8b-hf'),
     device_id=[int(x) for x in os.environ.get('CUDA_VISIBLE_IDS', '').split(',') if x.strip().isdigit()],
-    temperature=1.0,
-    top_k=10,
+    temperature=0.6,
+    top_k=50,
     top_p=0.9,
-    max_length=2048
+    max_length=2048,
+    num_processes=4,
+    mode='gen',
 )
 ENGINE = SinglePromptEngine(GLOBAL_ARGS)
 
@@ -69,7 +71,9 @@ if __name__ == '__main__':
     text_prompt = PROMPT
 
 
-    image_path = "/app/llava_hf/results/llava-llama3-8b-sllm-p10/test-single-eval-epoch5/010-blenderkit-granite_fc2964ea-914e-4434-b0b1-ad1b4d6b4b12-blender/input.jpg"
+    # image_path = "/app/llava_hf/results/llava-llama3-8b-sllm-p10/test-single-eval-epoch5/015-blenderkit-procedural_chees_a256b8f2-6d4a-49ad-8a6a-32520eeab5f6-blender/input.jpg"
+    # image_path = "/app/checkerboard.png"
+    image_path = "/app/rusty_texture.jpg"
     response = ENGINE.generate(image_path, text_prompt)
     print("---")
     print(response)
