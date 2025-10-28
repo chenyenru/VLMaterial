@@ -533,8 +533,8 @@ class SinglePromptEngine:
             {
                 "role": "user",
                 "content": [
+                    {"type": "text", "text": text_prompt},
                     {"type": "image"},
-                    {"type": "text", "text": text_prompt}
                 ]
             }
         ]
@@ -543,10 +543,9 @@ class SinglePromptEngine:
         prompt = self.processor.apply_chat_template(conversation, add_generation_prompt=True)
 
         inputs = self.processor(
-            images=image,
-            text=prompt,
-            return_tensors="pt",
-            add_special_tokens=not prompt.startswith(self.processor.tokenizer.bos_token)
+            images=image, text=prompt,
+            add_special_tokens=not prompt.startswith(self.processor.tokenizer.bos_token),
+            return_tensors="pt"
         )
 
         # Move inputs to device
@@ -566,6 +565,7 @@ class SinglePromptEngine:
 
         # Decode
         input_length = inputs['input_ids'].shape[1]
+        print(outputs.sequences.shape)
         response = self.processor.decode(outputs.sequences[0][input_length:], skip_special_tokens=True)
         return response
 
@@ -603,7 +603,7 @@ def main():
     # Spawn processes
     processes = []
     for i in range(args.num_processes):
-        p = Process(target=run_inference_one_image_and_prompt, args=(args, i, task_queue, result_queue))
+        p = Process(target=run_inference, args=(args, i, task_queue, result_queue))
         p.start()
         processes.append(p)
 
