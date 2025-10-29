@@ -26,10 +26,9 @@ python llava_hf/inference.py \
   --model_path llava_hf/checkpoints_pretrained/llava-llama3-8b-sllm-p10/checkpoint-epoch5 \
   --model_base llava-hf/llama3-llava-next-8b-hf \
   --test_data_path test_data_1029/dataset.json \
-  --image_folder test_data_1029 \               
-  --output_dir llava_hf/results/1029_paper_sample_run \
+  --image_folder test_data_1029 --output_dir llava_hf/results/1029_paper_sample_run \
   --mode gen \
   --num_samples 20 \
   --max_samples 20 \
   --num_processes 4 \
-  --device_id 0
+  --device_id 0 1
