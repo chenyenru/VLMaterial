@@ -1,7 +1,7 @@
 #!/bin/bash
 
 EXP_NAME="llava-llama3-8b-sllm-p10"
-ROOT_DIR="/data/VLMaterial"
+ROOT_DIR="/app"
 WORK_DIR="${ROOT_DIR}/llava_hf"
 DATA_DIR="${ROOT_DIR}/material_dataset_filtered"
 SPLIT_DIR="${DATA_DIR}/dataset_splits"
@@ -15,8 +15,21 @@ python ${WORK_DIR}/inference.py \
     --output_dir ${WORK_DIR}/results/${EXP_NAME}/testing-inference-function \
     --num_processes 4 \
     --display_id 1 \
-    --device_id 4 5 6 7 \
+    --device_id 0 1 \
     --temperature 0.6 \
     --top_k 50 \
     --top_p 0.9 \
     --mode gen
+
+
+python llava_hf/inference.py \
+  --model_path llava_hf/checkpoints_pretrained/llava-llama3-8b-sllm-p10/checkpoint-epoch5 \
+  --model_base llava-hf/llama3-llava-next-8b-hf \
+  --test_data_path test_data_1029/dataset.json \
+  --image_folder test_data_1029 \               
+  --output_dir llava_hf/results/1029_paper_sample_run \
+  --mode gen \
+  --num_samples 20 \
+  --max_samples 20 \
+  --num_processes 4 \
+  --device_id 0

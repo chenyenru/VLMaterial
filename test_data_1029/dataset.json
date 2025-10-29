@@ -1,0 +1,32 @@
+[
+  {
+    "id": "case_00001",
+    "image": "paper_sample1.png",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nWrite a Python function with Blender API to create a material node graph for this image."
+      }
+    ]
+  },
+  {
+    "id": "case_00002",
+    "image": "paper_sample2.png",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nWrite a Python function with Blender API to create a material node graph for this image."
+      }
+    ]
+  },
+  {
+    "id": "case_00003",
+    "image": "paper_sample3.png",
+    "conversations": [
+      {
+        "from": "human",
+        "value": "<image>\nWrite a Python function with Blender API to create a material node graph for this image."
+      }
+    ]
+  }
+]
