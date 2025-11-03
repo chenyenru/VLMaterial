@@ -24,11 +24,24 @@ python ${WORK_DIR}/inference.py \
 
 python llava_hf/inference.py \
   --model_path llava_hf/checkpoints_pretrained/llava-llama3-8b-sllm-p10/checkpoint-epoch5 \
-  --model_base llava-hf/llama3-llava-next-8b-hf \
-  --test_data_path test_data_1029/dataset.json \
+  --model_base llava-hf/llama3-llava-next-8b-hf   --test_data_path test_data_1029/dataset.json \
   --image_folder test_data_1029 --output_dir llava_hf/results/1029_paper_sample_run \
-  --mode gen \
-  --num_samples 20 \
-  --max_samples 20 \
-  --num_processes 4 \
-  --device_id 0 1
+  --mode gen   --num_samples 4   --max_samples 20   --num_processes 1   --device_id 0 1
+
+python llava_hf/inference.py \
+  --model_path llava_hf/checkpoints_pretrained/llava-llama3-8b-sllm-p10/checkpoint-epoch5 \
+  --model_base llava-hf/llama3-llava-next-8b-hf   --test_data_path in_the_wild_1029/dataset.json \
+  --image_folder in_the_wild_1029 --output_dir llava_hf/results/in_the_wild_1029_run \
+  --mode gen   --num_samples 4   --max_samples 20   --num_processes 1   --device_id 0 1
+
+python llava_hf/inference.py \
+  --model_path llava_hf/checkpoints_pretrained/llava-llama3-8b-sllm-p10/checkpoint-epoch5 \
+  --model_base llava-hf/llama3-llava-next-8b-hf   --test_data_path blenderkit_test_1029/dataset.json \
+  --image_folder blenderkit_test_1029 --output_dir llava_hf/results/blenderkit_test_1029_run \
+  --mode gen   --num_samples 4   --max_samples 20   --num_processes 1   --device_id 0 1
+
+python llava_hf/inference.py \
+  --model_path llava_hf/checkpoints_pretrained/llava-llama3-8b-sllm-p10/checkpoint-epoch5 \
+  --model_base llava-hf/llama3-llava-next-8b-hf   --test_data_path Procedural_Test/dataset.json \
+  --image_folder Procedural_Test --output_dir llava_hf/results/Procedural_Test_1103_run \
+  --mode gen   --num_samples 4   --max_samples 20   --num_processes 4   --device_id 0 1

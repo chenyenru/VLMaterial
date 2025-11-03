@@ -3,9 +3,10 @@ import json
 import os
 from pathlib import Path
 
-img_dir = os.getcwd() / Path('test_data_1029')
+img_dir = os.getcwd() / Path('Procedural_Test')
 print(f"{img_dir}")
-images = sorted([p.name for p in img_dir.glob('*.png')])  # adjust ext as needed
+images = sorted([p.name for p in img_dir.glob('*.png')])
+images.extend(sorted([p.name for p in img_dir.glob('*.jpg')]))
 
 data = []
 for i, img in enumerate(images, start=1):
